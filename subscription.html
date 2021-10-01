@@ -1,0 +1,10 @@
+<button id = "rzp-button1">Pay</button>
+<script src = "https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>  
+var options = <?php echo $json; ?>;
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e) {  
+	rzp1.open();  
+	e.preventDefault();
+}
+</script>

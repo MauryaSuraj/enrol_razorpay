@@ -1,0 +1,75 @@
+<div align="center">
+
+<div class="razorpayerror">
+    <div class="alert alert-danger" id="errordivrazorpay" style="display: none;"></div>
+</div>
+
+<p><?php print_string("paymentrequired") ?></p>
+<p><b><?php echo $instancename; ?></b></p>
+<p><b><?php echo get_string("cost").": {$instance->currency} {$localisedcost}"; ?></b></p>
+<p><img alt="<?php print_string('razorparaccepted', 'enrol_razorpay') ?>" src="<?php echo $razorpayicon; ?>" /></p>
+<p><?php print_string("paymentinstant") ?></p>
+
+<button id="rzp-button1"><?php print_string("sendpaymentbutton", "enrol_razorpay"); ?></button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<form name='razorpayform' action="<?php echo $verficationurl; ?>" method="POST">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_signature"  id="razorpay_signature" >
+</form>
+<script>
+// Checkout details as a json
+var options = <?php echo $json; ?>;
+
+/**
+ * The entire list of Checkout fields is available at
+ * https://docs.razorpay.com/docs/checkout-form#checkout-fields
+ */
+options.handler = function (response){
+    document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+    document.getElementById('razorpay_signature').value = response.razorpay_signature;
+    document.razorpayform.submit();
+};
+
+// Boolean whether to show image inside a white frame. (default: true)
+options.theme.image_padding = false;
+
+options.modal = {
+    ondismiss: function() {
+          setTimeout(function () {
+            location.reload(true);
+          }, 2000);
+    },
+    escape: true,
+    backdropclose: false
+};
+
+var rzp = new Razorpay(options);
+
+rzp.on('payment.failed', function (response) {
+
+        var data = new FormData();
+        data.append('errorcode', response.error.code);
+        data.append('errordescription', response.error.description);
+        data.append('source', response.error.source);
+        data.append('step', response.error.step);
+        data.append('reason', response.error.reason);
+        data.append('orderid', response.error.metadata.order_id);
+        data.append('paymentid', response.error.metadata.payment_id);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "<?php echo $verficationurl; ?>", true);
+        xhr.onload = function () {
+            if (this.responseText == 'error') {
+                document.getElementById("errordivrazorpay").style.display = "block";
+                document.getElementById('errordivrazorpay').innerHTML = "<?php echo get_string('paymentfailed', 'enrol_razorpay'); ?>"; 
+                rzp.close();
+            }
+        };
+        xhr.send(data);
+});
+
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+</div>

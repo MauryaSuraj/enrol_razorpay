@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="enrol/razorpay/db" VERSION="20180625" COMMENT="XMLDB file for Moodle enrol/razorpay"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+
+    <TABLE NAME="enrol_razorpay" COMMENT="Holds all known information about Razor Pay transactions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="paymentid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="orderid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="amount" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="currency" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="item_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="user_email" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="user_phone" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="paid_through" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="paymentrawdata" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="error_code" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="error_description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="error_source" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="error_step" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="error_reason" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="paymenttime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timeupdated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="enrol" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_email" UNIQUE="false" FIELDS="user_email"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="enrol_razorpay_plans" COMMENT="Holds all the information regading Razorpay plans for subscriptions plans">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"  />
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="subscriptioncycle" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" />
+        <FIELD NAME="item_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="item_amount" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="item_currency" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="item_description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="plan_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="plan_status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" COMMENT="1-Active 2-ReActive 0-DeActivated" SEQUENCE="false" />
+        <FIELD NAME="api_data" TYPE="text" LENGTH="255" NOTNULL="false" COMMENT="Return Value of Plan Api data" SEQUENCE="false"  /> 
+        <FIELD NAME="createdat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" />
+        <KEY NAME="createdplanuser" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="enrol" REFFIELDS="id" />
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="enrol_razorpay_subscription" COMMENT="Holds all the information regading Razorpay subscriptions One subscription for one user">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"  />
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="item_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="item_amount" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="item_currency" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="item_description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" />
+        <FIELD NAME="plan_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="subscription_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="subscription_cycle" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Number of cycle subscription will have"  SEQUENCE="false" />
+        <FIELD NAME="subscription_start_at" TYPE="int" LENGTH="11" NOTNULL="true" COMMENT="Defines the startdate of subscription by defalut subscription will start after payment" />
+        <FIELD NAME="plan_status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" COMMENT="1-Active 2-ReActive 0-DeActivated" SEQUENCE="false" />
+        <FIELD NAME="api_data" TYPE="text" LENGTH="255" NOTNULL="false" COMMENT="Return Value of Plan Api data" SEQUENCE="false"  /> 
+        <FIELD NAME="createdat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" />
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+        <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="enrol" REFFIELDS="id" />
+      </KEYS>
+    </TABLE>
+        <TABLE NAME="enrol_razorpay_sub_ins" COMMENT="Holds all the information regading Razorpay plans for subscriptions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"  />
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"  />
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="paymentid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Razorpay payment id" /> 
+        <FIELD NAME="plan_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Razorpay Plan id " />
+        <FIELD NAME="subscription_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Razorpay subscription id" />
+        <FIELD NAME="total_subscription_cycle" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Number of cycle subscription will have"  SEQUENCE="false" />
+        <FIELD NAME="all_installment_paid" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" COMMENT="this check if user has paid all the installments" />
+        <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" COMMENT="1-Active 2-ReActive 0-DeActivated" SEQUENCE="false" />
+        <FIELD NAME="api_data" TYPE="text" LENGTH="255" NOTNULL="false" COMMENT="Return Value of Plan Api data" SEQUENCE="false"  /> 
+        <FIELD NAME="paidat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" />
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
